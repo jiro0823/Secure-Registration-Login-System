@@ -17,6 +17,7 @@ API Routes:
 """
 
 from fastapi import APIRouter, Cookie, Depends, Request, Response
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -218,3 +219,14 @@ def health_check():
     Simple health check endpoint for monitoring and deployment verification.
     """
     return {"message": "Server is running securely."}
+
+
+@router.get(
+    "/db-health",
+    response_model=MessageResponse,
+    summary="Database health check",
+    description="Verifies that the app can connect to the configured PostgreSQL database.",
+)
+def db_health_check(db: Session = Depends(get_db)):
+    db.execute(text("SELECT 1"))
+    return {"message": "Database connection is healthy."}

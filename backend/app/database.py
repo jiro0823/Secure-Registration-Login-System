@@ -25,14 +25,24 @@ schema_engine = create_engine(
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+_schema_initialized = False
 
 
 class Base(DeclarativeBase):
     pass
 
 
+def init_schema() -> None:
+    global _schema_initialized
+    if _schema_initialized:
+        return
+    Base.metadata.create_all(bind=schema_engine)
+    _schema_initialized = True
+
+
 def get_db():
 
+    init_schema()
     db = SessionLocal()
     try:
         yield db
