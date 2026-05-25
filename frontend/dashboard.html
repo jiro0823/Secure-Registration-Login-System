@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Secure dashboard — protected by JWT authentication.">
+    <title>Dashboard | Secure Auth System</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="dashboard-brand">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <path d="M9 12l2 2 4-4" stroke="#00ff88"></path>
+                </svg>
+                <span class="dashboard-brand-text">SecureAuth Dashboard</span>
+            </div>
+            <button id="logout-btn" class="btn-logout">
+                ⎋ Logout
+            </button>
+        </header>
+
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+            <h1 class="welcome-title">
+                Welcome, <span id="display-username" class="username">User</span>
+            </h1>
+            <p class="welcome-subtitle">Your session is protected by JWT authentication with 15-minute expiry</p>
+        </div>
+
+        <!-- Security Status Grid -->
+        <div class="security-grid">
+            <div class="security-card">
+                <div class="security-card-icon active">🔐</div>
+                <div class="security-card-title">Bcrypt Hashing</div>
+                <div class="security-card-desc">Password hashed with bcrypt + unique salt + secret pepper</div>
+                <div class="security-card-status"><span class="status-dot"></span> Active</div>
+            </div>
+            <div class="security-card">
+                <div class="security-card-icon active">🧂</div>
+                <div class="security-card-title">Salt + Pepper</div>
+                <div class="security-card-desc">Unique salt per user, pepper from environment variable</div>
+                <div class="security-card-status"><span class="status-dot"></span> Active</div>
+            </div>
+            <div class="security-card">
+                <div class="security-card-icon active">🛡️</div>
+                <div class="security-card-title">Rate Limiting</div>
+                <div class="security-card-desc">Login attempts limited to 5 per minute via SlowAPI</div>
+                <div class="security-card-status"><span class="status-dot"></span> Active</div>
+            </div>
+            <div class="security-card">
+                <div class="security-card-icon active">🔒</div>
+                <div class="security-card-title">Account Lockout</div>
+                <div class="security-card-desc">Auto-lock after 5 failed attempts for 15 minutes</div>
+                <div class="security-card-status"><span class="status-dot"></span> Active</div>
+            </div>
+            <div class="security-card">
+                <div class="security-card-icon active">🪪</div>
+                <div class="security-card-title">JWT Tokens</div>
+                <div class="security-card-desc">Stateless authentication with 15-minute token expiry</div>
+                <div class="security-card-status"><span class="status-dot"></span> Active</div>
+            </div>
+            <div class="security-card">
+                <div class="security-card-icon active">📋</div>
+                <div class="security-card-title">Security Headers</div>
+                <div class="security-card-desc">CSP, X-Frame-Options, HSTS, and referrer policy</div>
+                <div class="security-card-status"><span class="status-dot"></span> Active</div>
+            </div>
+        </div>
+
+        <!-- User Info Card -->
+        <div class="user-info-card">
+            <div class="user-info-row">
+                <span class="user-info-label">User ID</span>
+                <span id="display-id" class="user-info-value">—</span>
+            </div>
+            <div class="user-info-row">
+                <span class="user-info-label">Username</span>
+                <span id="display-user" class="user-info-value">—</span>
+            </div>
+            <div class="user-info-row">
+                <span class="user-info-label">Account Created</span>
+                <span id="display-created" class="user-info-value">—</span>
+            </div>
+            <div class="user-info-row">
+                <span class="user-info-label">Token Expiry</span>
+                <span class="user-info-value">15 minutes</span>
+            </div>
+            <div class="user-info-row">
+                <span class="user-info-label">Encryption</span>
+                <span class="user-info-value">bcrypt + HS256</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
