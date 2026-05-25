@@ -143,7 +143,7 @@ def login(
     "/refresh",
     response_model=MessageResponse,
     summary="Refresh session",
-    description="Rotate the MySQL-backed refresh token and issue a new access cookie.",
+    description="Rotate the database-backed refresh token and issue a new access cookie.",
 )
 def refresh(
     response: Response,
@@ -162,7 +162,7 @@ def refresh(
     "/logout",
     response_model=MessageResponse,
     summary="Logout user",
-    description="Revoke the MySQL-backed refresh session and clear auth cookies.",
+    description="Revoke the database-backed refresh session and clear auth cookies.",
 )
 def logout(
     response: Response,
@@ -174,7 +174,7 @@ def logout(
     Logout the current user.
 
     Security:
-    - Revokes the refresh session stored in MySQL
+    - Revokes the refresh session stored in the database
     - Clears HttpOnly auth cookies in the browser
     - Short-lived access cookie naturally expires quickly
     """

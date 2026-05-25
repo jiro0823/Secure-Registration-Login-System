@@ -25,13 +25,16 @@ DATABASE_URL: str = os.getenv("DATABASE_URL", "")
 if not DATABASE_URL:
     raise RuntimeError(
         "CRITICAL: DATABASE_URL environment variable is not set. "
-        "Use a MySQL URL such as mysql+pymysql://user:pass@localhost:3306/secure_auth_db."
+        "Use a PostgreSQL URL such as postgresql://user:pass@host:5432/postgres."
     )
 
-if not DATABASE_URL.startswith("mysql+pymysql://"):
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+if not DATABASE_URL.startswith(("postgresql://", "postgresql+psycopg2://")):
     raise RuntimeError(
-        "CRITICAL: This project is configured to use MySQL only. "
-        "Set DATABASE_URL to mysql+pymysql://user:pass@host:3306/database."
+        "CRITICAL: This project is configured to use PostgreSQL/Supabase only. "
+        "Set DATABASE_URL to postgresql://user:pass@host:5432/database."
     )
 
 COOKIE_SECURE: bool = os.getenv("COOKIE_SECURE", "false").lower() == "true"

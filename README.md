@@ -34,7 +34,7 @@
 - 🧹 **Input Sanitization** — XSS and injection prevention
 - 💉 **SQL Injection Prevention** — SQLAlchemy ORM only
 - 🍪 **HttpOnly Cookies** — JWTs are not exposed to browser JavaScript
-- 🗄️ **MySQL Session Defense** — refresh tokens are hashed, stored, rotated, and revocable
+- 🗄️ **PostgreSQL/Supabase Session Defense** — refresh tokens are hashed, stored, rotated, and revocable
 
 ### Frontend
 
@@ -54,7 +54,7 @@
 | **Hashing**       | Passlib (bcrypt)                      |
 | **JWT**           | python-jose                           |
 | **Rate Limiting** | SlowAPI                               |
-| **Database**      | MySQL (via SQLAlchemy)                |
+| **Database**      | PostgreSQL/Supabase (via SQLAlchemy)  |
 | **Frontend**      | HTML5, Custom CSS, Vanilla JavaScript |
 | **Deployment**    | Render                                |
 
@@ -129,11 +129,11 @@ The `.env` file is pre-configured for local development. For production, update:
 - `APP_PEPPER` — change to a unique secret
 - `JWT_SECRET_KEY` — generate new: `python -c "import secrets; print(secrets.token_hex(32))"`
 - `ALLOWED_ORIGINS` — add your production URL
-- `DATABASE_URL` — set your MySQL connection string
+- `DATABASE_URL` — set your Supabase PostgreSQL connection string
 - `COOKIE_SECURE` — use `false` for local HTTP, `true` for production HTTPS
 
-If the configured MySQL user does not exist yet, run `mysql-setup.sql` in MySQL
-Workbench or another MySQL admin client before starting the app.
+For production, use a hosted PostgreSQL database such as Supabase. Local XAMPP
+MySQL is not reachable from Render.
 
 ### 5. Run the server
 
@@ -181,7 +181,7 @@ listening there, it automatically tries the next free port.
    - `APP_PEPPER` = your secret pepper
    - `JWT_SECRET_KEY` = your JWT secret
    - `ALLOWED_ORIGINS` = `https://your-app.onrender.com`
-   - `DATABASE_URL` = `mysql+pymysql://user:pass@host:3306/secure_auth_db`
+   - `DATABASE_URL` = `postgresql://user:pass@host:5432/postgres`
    - `COOKIE_SECURE` = `true`
    - `COOKIE_SAMESITE` = `lax`
 6. **Deploy** → Get your public URL
