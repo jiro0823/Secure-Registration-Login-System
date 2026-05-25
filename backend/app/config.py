@@ -1,4 +1,5 @@
 import os
+from sqlalchemy.engine import make_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,6 +22,23 @@ JWT_ALGORITHM: str = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
     os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "15"))
 
+def _normalize_postgres_url(raw_url: str) -> str:
+    """Normalize Supabase/PostgreSQL URLs for SQLAlchemy + psycopg2."""
+    if raw_url.startswith("postgres://"):
+        raw_url = raw_url.replace("postgres://", "postgresql://", 1)
+
+    if not raw_url.startswith(("postgresql://", "postgresql+psycopg2://")):
+        raise RuntimeError(
+            "CRITICAL: This project is configured to use PostgreSQL/Supabase only. "
+            "Set DATABASE_URL to postgresql://user:pass@host:5432/database."
+        )
+
+    url = make_url(raw_url)
+    query = dict(url.query)
+    query.pop("pgbouncer", None)
+    return url.set(query=query).render_as_string(hide_password=False)
+
+
 DATABASE_URL: str = os.getenv("DATABASE_URL", "")
 if not DATABASE_URL:
     raise RuntimeError(
@@ -28,14 +46,10 @@ if not DATABASE_URL:
         "Use a PostgreSQL URL such as postgresql://user:pass@host:5432/postgres."
     )
 
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-
-if not DATABASE_URL.startswith(("postgresql://", "postgresql+psycopg2://")):
-    raise RuntimeError(
-        "CRITICAL: This project is configured to use PostgreSQL/Supabase only. "
-        "Set DATABASE_URL to postgresql://user:pass@host:5432/database."
-    )
+DATABASE_URL = _normalize_postgres_url(DATABASE_URL)
+DIRECT_URL: str = os.getenv("DIRECT_URL", "")
+if DIRECT_URL:
+    DIRECT_URL = _normalize_postgres_url(DIRECT_URL)
 
 COOKIE_SECURE: bool = os.getenv("COOKIE_SECURE", "false").lower() == "true"
 COOKIE_SAMESITE: str = os.getenv("COOKIE_SAMESITE", "lax").lower()
