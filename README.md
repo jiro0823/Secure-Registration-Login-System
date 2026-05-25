@@ -181,8 +181,8 @@ listening there, it automatically tries the next free port.
    - `APP_PEPPER` = your secret pepper
    - `JWT_SECRET_KEY` = your JWT secret
    - `ALLOWED_ORIGINS` = `https://your-app.onrender.com`
-   - `DATABASE_URL` = `postgresql://postgres.<project-ref>:<password>@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true`
-   - `DIRECT_URL` = `postgresql://postgres.<project-ref>:<password>@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres`
+   - `DATABASE_URL` = `postgresql://postgres.<project-ref>:<password>@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require`
+   - `DIRECT_URL` = `postgresql://postgres.<project-ref>:<password>@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require`
    - `COOKIE_SECURE` = `true`
    - `COOKIE_SAMESITE` = `lax`
 6. **Deploy** → Get your public URL

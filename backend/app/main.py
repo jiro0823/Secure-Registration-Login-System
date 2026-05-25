@@ -10,7 +10,7 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
 from app.config import ALLOWED_ORIGINS
-from app.database import engine, Base
+from app.database import schema_engine, Base
 from app.routes.auth_routes import router as auth_router, limiter
 
 
@@ -19,7 +19,7 @@ logger = logging.getLogger("secure_auth")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=schema_engine)
     yield
 
 app = FastAPI(

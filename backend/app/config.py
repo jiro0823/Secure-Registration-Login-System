@@ -36,6 +36,8 @@ def _normalize_postgres_url(raw_url: str) -> str:
     url = make_url(raw_url)
     query = dict(url.query)
     query.pop("pgbouncer", None)
+    if url.host and "supabase.com" in url.host:
+        query.setdefault("sslmode", "require")
     return url.set(query=query).render_as_string(hide_password=False)
 
 
