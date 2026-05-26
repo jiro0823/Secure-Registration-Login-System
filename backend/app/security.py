@@ -23,8 +23,8 @@ from app.config import (
 logging.getLogger("passlib").setLevel(logging.ERROR)
 
 # ---------------------------------------------------------------------------
-# Bcrypt Configuration
-# CryptContext handles hashing and verification with bcrypt
+# Password Hash Configuration
+# Use bcrypt with a pre-hash step to avoid the 72-byte bcrypt limit.
 # deprecated="auto" ensures old hashes are automatically rehashed
 # ---------------------------------------------------------------------------
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -62,6 +62,12 @@ def hash_token(token: str) -> str:
 # PASSWORD HASHING (Salt + Pepper + Bcrypt)
 # ===========================================================================
 
+def _prehash_password(password: str, salt: str) -> str:
+    """Pre-hash password+salt+pepper to a fixed length for bcrypt."""
+    combined = (password + salt + APP_PEPPER).encode("utf-8")
+    return hashlib.sha256(combined).hexdigest()
+
+
 def hash_password(password: str, salt: str) -> str:
     """
     Hash a password using bcrypt with salt and pepper.
@@ -82,9 +88,9 @@ def hash_password(password: str, salt: str) -> str:
     Returns:
         Bcrypt hash string
     """
-    # Combine password + salt + pepper before hashing
-    combined = password + salt + APP_PEPPER
-    return pwd_context.hash(combined)
+    # Pre-hash to avoid bcrypt 72-byte limit, then bcrypt the fixed-length digest
+    prehashed = _prehash_password(password, salt)
+    return pwd_context.hash(prehashed)
 
 
 def verify_password(password: str, salt: str, stored_hash: str) -> bool:
@@ -105,8 +111,8 @@ def verify_password(password: str, salt: str, stored_hash: str) -> bool:
     Returns:
         True if password is correct, False otherwise
     """
-    combined = password + salt + APP_PEPPER
-    return pwd_context.verify(combined, stored_hash)
+    prehashed = _prehash_password(password, salt)
+    return pwd_context.verify(prehashed, stored_hash)
 
 
 # ===========================================================================
